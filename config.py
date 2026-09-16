@@ -44,11 +44,11 @@ def get_authorized_user_ids() -> List[int]:
 
 
 def get_max_duration() -> int:
-    """Maximum test duration in seconds (default: 120)."""
+    """Maximum test duration in seconds (default: 300)."""
     try:
-        return int(_get_secret("MAX_DURATION", "120"))
+        return int(_get_secret("MAX_DURATION", "300"))
     except (TypeError, ValueError):
-        return 120
+        return 300
 
 
 def get_max_rate() -> int:
