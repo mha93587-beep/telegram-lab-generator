@@ -179,8 +179,8 @@ async def _run_bot_async():
 
     try:
         await app.initialize()
-        await app.updater.start_polling(drop_pending_updates=True)
         await app.start()
+        await app.updater.start_polling(drop_pending_updates=True)
         _bot_connected = True
         _bot_running = True
         logger.info("Telegram bot polling started.")

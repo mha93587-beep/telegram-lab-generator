@@ -27,11 +27,14 @@ from telegram_bot import (
 )
 from config import get_authorized_user_ids, get_max_duration, get_max_rate
 
-# ── Start bot once per process ──────────────────────────────────────────
-if "bot_started" not in st.session_state:
+# ── Start bot once per server process ───────────────────────────────────
+@st.cache_resource
+def init_bot():
     start_bot()
     atexit.register(stop_bot)
-    st.session_state.bot_started = True
+    return True
+
+init_bot()
 
 # ── Shared objects ──────────────────────────────────────────────────────
 generator = get_generator()
