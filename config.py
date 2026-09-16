@@ -61,15 +61,6 @@ def get_max_rate() -> int:
 
 # ---------- Validation helpers ----------
 
-# Reserved / non-routable networks that are ALLOWED for lab use
-_ALLOWED_PRIVATE_NETS = [
-    ipaddress.ip_network("10.0.0.0/8"),
-    ipaddress.ip_network("172.16.0.0/12"),
-    ipaddress.ip_network("192.168.0.0/16"),
-    ipaddress.ip_network("100.64.0.0/10"),   # CGNAT / lab VPNs
-]
-
-
 def validate_ip(ip_str: str) -> str:
     """Validate and return a sanitised IP string.
 
@@ -77,7 +68,6 @@ def validate_ip(ip_str: str) -> str:
     * Must be a valid IPv4 or IPv6 address.
     * Must NOT be multicast (224.0.0.0/4, ff00::/8).
     * Must NOT be a broadcast address (255.255.255.255).
-    * Must be a private/lab-range address (RFC 1918 + CGNAT).
 
     Raises ValueError with a human-readable message on failure.
     """
@@ -91,13 +81,6 @@ def validate_ip(ip_str: str) -> str:
 
     if ip_str == "255.255.255.255":
         raise ValueError("Broadcast address 255.255.255.255 is not allowed.")
-
-    if isinstance(addr, ipaddress.IPv4Address):
-        if not any(addr in net for net in _ALLOWED_PRIVATE_NETS):
-            raise ValueError(
-                f"Only private/lab IP ranges are allowed. "
-                f"{ip_str} is not in a recognised lab range."
-            )
 
     return str(addr)
 
