@@ -37,6 +37,7 @@ _bot_app: Optional[Application] = None
 _generator: Optional[TrafficGenerator] = None
 _bot_running = False
 _bot_connected = False
+_stop_event = threading.Event()
 
 
 def get_generator() -> TrafficGenerator:
@@ -157,42 +158,59 @@ async def cmd_stop(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # ── Bot lifecycle ───────────────────────────────────────────────────────
 
-def _run_bot_in_thread():
-    """Entry point for the background thread that runs the Telegram bot."""
+async def _run_bot_async():
+    """Async entry point: manually drives the Application lifecycle.
+
+    We avoid ``app.run_polling()`` because it calls
+    ``loop.add_signal_handler()`` which raises ``RuntimeError`` when
+    executed outside the main thread (the case on Streamlit Cloud).
+    Instead we call the individual lifecycle methods ourselves.
+    """
     global _bot_app, _bot_connected, _bot_running
 
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
+    token = get_telegram_token()
+    app = Application.builder().token(token).build()
+    app.add_handler(CommandHandler("start", cmd_start))
+    app.add_handler(CommandHandler("status", cmd_status))
+    app.add_handler(CommandHandler("send", cmd_send))
+    app.add_handler(CommandHandler("stop", cmd_stop))
+
+    _bot_app = app
 
     try:
-        token = get_telegram_token()
-        app = (
-            Application.builder()
-            .token(token)
-            .build()
-        )
-        app.add_handler(CommandHandler("start", cmd_start))
-        app.add_handler(CommandHandler("status", cmd_status))
-        app.add_handler(CommandHandler("send", cmd_send))
-        app.add_handler(CommandHandler("stop", cmd_stop))
-
-        _bot_app = app
+        await app.initialize()
+        await app.updater.start_polling(drop_pending_updates=True)
+        await app.start()
         _bot_connected = True
         _bot_running = True
         logger.info("Telegram bot polling started.")
 
-        # run_polling blocks until the application shuts down
-        loop.run_until_complete(
-            app.run_polling(
-                drop_pending_updates=True,
-                close_loop=False,
-            )
-        )
+        # Block until stop is requested
+        while not _stop_event.is_set():
+            await asyncio.sleep(1)
+
     except Exception:
-        logger.exception("Telegram bot thread crashed.")
+        logger.exception("Telegram bot crashed.")
     finally:
         _bot_running = False
         _bot_connected = False
+        try:
+            await app.updater.stop()
+            await app.stop()
+            await app.shutdown()
+        except Exception:
+            logger.debug("Error during bot shutdown.", exc_info=True)
+
+
+def _run_bot_in_thread():
+    """Entry point for the daemon thread — creates its own event loop."""
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        loop.run_until_complete(_run_bot_async())
+    except Exception:
+        logger.exception("Telegram bot thread crashed.")
+    finally:
         loop.close()
 
 
@@ -203,6 +221,7 @@ def start_bot() -> None:
         if _bot_thread is not None and _bot_thread.is_alive():
             logger.debug("Bot thread already running – skipping.")
             return
+        _stop_event.clear()
         _bot_thread = threading.Thread(
             target=_run_bot_in_thread,
             daemon=True,
@@ -214,12 +233,5 @@ def start_bot() -> None:
 
 def stop_bot() -> None:
     """Request a graceful shutdown of the bot (best-effort)."""
-    global _bot_app
-    if _bot_app is not None:
-        try:
-            # Schedule shutdown from the bot's own event loop
-            loop = _bot_app._loop  # type: ignore[attr-defined]
-            if loop and loop.is_running():
-                loop.call_soon_threadsafe(_bot_app.stop_running)
-        except Exception:
-            logger.debug("Could not cleanly stop bot.", exc_info=True)
+    _stop_event.set()
+

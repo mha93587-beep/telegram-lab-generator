@@ -1,0 +1,197 @@
+
+[     UTC     ] Logs for telegram-lab-generator-xluwfdc6hwdashmmmadqcd.streamlit.app/
+────────────────────────────────────────────────────────────────────────────────────────
+[10:44:29] 🚀 Starting up repository: 'telegram-lab-generator', branch: 'main', main module: 'app.py'
+[10:44:29] 🐙 Cloning repository...
+[10:44:31] 🐙 Cloning into '/mount/src/telegram-lab-generator'...
+
+[10:44:31] 🐙 Cloned repository!
+[10:44:31] 🐙 Pulling code changes from Github...
+[10:44:32] 📦 Processing dependencies...
+
+──────────────────────────────────────── uv ───────────────────────────────────────────
+
+Using uv pip install.
+Using Python 3.14.7 environment at /home/adminuser/venv
+Resolved 39 packages in 487ms
+Prepared 39 packages in 1.85s
+Installed 39 packages in 87ms
+ + altair==6.3.0
+ + anyio==4.15.1
+ + attrs==26.1.0
+ + certifi==2026.7.22
+ + charset-normalizer==3.5.1
+ + click==8.5.0
+ + h11==0.16.0
+ + httpcore==1.0.9
+ + httptools==0.8.0
+ + httpx==0.28.1
+ + idna==3.19
+ + itsdangerous==2.2.0
+ + jinja2==3.1.6
+ + jsonschema==4.26.0
+ + jsonschema-specifications==2025.9.1
+ + markupsafe==3.0.3
+ + narwhals==[2026-09-16 10:44:34.962602] 2.26.0
+ + numpy==2.5.3
+ + packaging==26.3
+ + pandas==3.0.5
+ + pillow==12.3.0
+ + protobuf==7.36.1
+ + pyarrow==25.0.1
+ + pydeck==0.9.3
+ + python-dateutil==2.9.0.post0[2026-09-16 10:44:34.962831] 
+ + python-multipart==0.0.32
+ + python-telegram-bot==22.8
+ + referencing==0.37.0
+ [2026-09-16 10:44:34.962996] + requests==2.34.2
+ + rpds-py==2026.6.3
+ + six==1.17.0
+ + starlette==1.6.0
+ + streamlit==1.64.0
+ + toml==0.10.2
+ + typing-extensions==4.16.0
+ + urllib3==[2026-09-16 10:44:34.963388] 2.8.0
+ + uvicorn==0.53.0
+ + watchdog==6.0.0
+ + websockets==16.1.1
+Checking if Streamlit is installed
+Found Streamlit version 1.64.0 in the environment
+Detected pyarrow 25.0.1 (known segfault, apache/arrow#50471). Replacing with pyarrow<25.
+Using uv pip install.
+Using Python 3.14.7 environment at /home/adminuser/venv
+Resolved 1 package in 40ms
+Prepared 1 package in 873ms
+Uninstalled 1 package in 19ms
+Installed 1 package in 33ms
+ - pyarrow==25.0.1
+ + pyarrow==24.0.0
+Installing rich for an improved exception logging
+Using uv pip install.
+Using Python 3.14.7 environment at /home/adminuser/venv
+Resolved 4 packages in 124ms
+Prepared 4 packages in 126ms
+Installed 4 packages in 18ms
+ + markdown-it-py==4.2.0
+ + mdurl==0.1.2
+ + pygments==2.21.0
+ + rich==15.0.0
+
+────────────────────────────────────────────────────────────────────────────────────────
+
+[10:44:40] 🐍 Python dependencies were installed from /mount/src/telegram-lab-generator/requirements.txt using uv.
+Check if streamlit is installed
+Streamlit is already installed
+[10:44:42] 📦 Processed dependencies!
+2026-09-16 10:44:44.275 Uvicorn server started on :::8501
+
+
+
+Telegram bot thread crashed.
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.14/asyncio/unix_events.py", line 108, in add_signal_handler
+    signal.set_wakeup_fd(self._csock.fileno())
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+ValueError: set_wakeup_fd only works in main thread of the main interpreter
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mount/src/telegram-lab-generator/telegram_bot.py", line 186, in _run_bot_in_thread
+    app.run_polling(
+    ~~~~~~~~~~~~~~~^
+        drop_pending_updates=True,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+        close_loop=False,
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/adminuser/venv/lib/python3.14/site-packages/telegram/ext/_application.py", line 839, in run_polling
+    return self.__run(
+           ~~~~~~~~~~^
+        updater_coroutine=self.updater.start_polling(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<9 lines>...
+        close_loop=close_loop,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/adminuser/venv/lib/python3.14/site-packages/telegram/ext/_application.py", line 1044, in __run
+    loop.add_signal_handler(sig, self._raise_system_exit)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.14/asyncio/unix_events.py", line 110, in add_signal_handler
+    raise RuntimeError(str(exc))
+RuntimeError: set_wakeup_fd only works in main thread of the main interpreter
+/mount/src/telegram-lab-generator/telegram_bot.py:192: RuntimeWarning: coroutine 'Updater.start_polling' was never awaited
+  logger.exception("Telegram bot thread crashed.")
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+Telegram bot thread crashed.
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.14/asyncio/unix_events.py", line 108, in add_signal_handler
+    signal.set_wakeup_fd(self._csock.fileno())
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+ValueError: set_wakeup_fd only works in main thread of the main interpreter
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mount/src/telegram-lab-generator/telegram_bot.py", line 186, in _run_bot_in_thread
+    app.run_polling(
+    ~~~~~~~~~~~~~~~^
+        drop_pending_updates=True,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+        close_loop=False,
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/adminuser/venv/lib/python3.14/site-packages/telegram/ext/_application.py", line 839, in run_polling
+    return self.__run(
+           ~~~~~~~~~~^
+        updater_coroutine=self.updater.start_polling(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<9 lines>...
+        close_loop=close_loop,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/adminuser/venv/lib/python3.14/site-packages/telegram/ext/_application.py", line 1044, in __run
+    loop.add_signal_handler(sig, self._raise_system_exit)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.14/asyncio/unix_events.py", line 110, in add_signal_handler
+    raise RuntimeError(str(exc))
+RuntimeError: set_wakeup_fd only works in main thread of the main interpreter
+Telegram bot thread crashed.
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.14/asyncio/unix_events.py", line 108, in add_signal_handler
+    signal.set_wakeup_fd(self._csock.fileno())
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+ValueError: set_wakeup_fd only works in main thread of the main interpreter
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mount/src/telegram-lab-generator/telegram_bot.py", line 186, in _run_bot_in_thread
+    app.run_polling(
+    ~~~~~~~~~~~~~~~^
+        drop_pending_updates=True,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+        close_loop=False,
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/adminuser/venv/lib/python3.14/site-packages/telegram/ext/_application.py", line 839, in run_polling
+    return self.__run(
+           ~~~~~~~~~~^
+        updater_coroutine=self.updater.start_polling(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<9 lines>...
+        close_loop=close_loop,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/adminuser/venv/lib/python3.14/site-packages/telegram/ext/_application.py", line 1044, in __run
+    loop.add_signal_handler(sig, self._raise_system_exit)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.14/asyncio/unix_events.py", line 110, in add_signal_handler
+    raise RuntimeError(str(exc))
+RuntimeError: set_wakeup_fd only works in main thread of the main interpreter
